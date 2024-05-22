@@ -2,7 +2,7 @@ import express from "express";
 import { sqlDatabase } from "./DB/sql.config.js";
 import bodyParser from "body-parser";
 const app = express();
-app.use(bodyParser.json())
+app.use(bodyParser.json());
 const connection = sqlDatabase();
 
 app.get("/", (req, res) => {
@@ -76,7 +76,29 @@ app.get("/getprodcutbyid/:id", (req, res) => {
   try {
     const { id } = req.params;
     console.log(id);
-    const query = `select *from product where prod_id=${id}`;
+    const query = `SELECT 
+    product.prod_name, 
+    series.ser_name, 
+    product.photo, 
+    category.cat_name, 
+    color.col_name, 
+    user.user_name, 
+    product.archive, 
+    product.stock, 
+    product.created_at, 
+    product.updated_at
+FROM 
+    product
+JOIN 
+    series ON product.series_id = series.ser_id
+JOIN 
+    category ON product.category_id = category.cat_id
+JOIN 
+    color ON product.color_id = color.col_id
+JOIN 
+    user ON product.user_id = user.user_id
+WHERE 
+    product.prod_id = ${id}`;
     connection.query(query, (error, result) => {
       if (error) {
         return res.json(error);
@@ -84,6 +106,7 @@ app.get("/getprodcutbyid/:id", (req, res) => {
 
       console.log("get the prodcut  successfully:", result);
       connection.end(); // Close the connection
+
       return res.json(result);
     });
   } catch (error) {
@@ -135,21 +158,21 @@ app.post("/updateproductbyid", (req, res) => {
   }
 });
 
-app.get("/deleteprodcut/:id",(req, res)=>{
+app.get("/deleteprodcut/:id", (req, res) => {
   try {
-    const {id}=req.params;
+    const { id } = req.params;
 
-    const query= `DELETE FROM product WHERE prod_id = ${id}`;
+    const query = `DELETE FROM product WHERE prod_id = ${id}`;
 
-    connection.query(query, (error, result)=>{
-      if(error) return res.json(error);
-      console.log("prodcut deleted")
+    connection.query(query, (error, result) => {
+      if (error) return res.json(error);
+      console.log("prodcut deleted");
       return res.json(result);
-    })
+    });
   } catch (error) {
     console.log(error);
   }
-})
+});
 
 app.listen(5000, () => {
   console.log("app is running on 5000");

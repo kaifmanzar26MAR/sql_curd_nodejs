@@ -7,7 +7,16 @@ export const sqlDatabase = () => {
     user: "root", // e.g., 'root'
     password: "Kaifmanzar@321",
     database: "jung",
+
+    //m2a
+    // host: "instance1.ch0u2emkohha.ap-south-1.rds.amazonaws.com", // e.g., '192.168.1.100'
+    // user: "admin", // e.g., 'root'
+    // password: "2024Made2Automate",
+    // database: "MainDatabase",
+    
   });
+
+
 
   // Connect to the database
   connection.connect((err) => {
